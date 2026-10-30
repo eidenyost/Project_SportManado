@@ -1,0 +1,26 @@
+{
+  "private": true,
+  "type": "module",
+  "devDependencies": {
+    "@fontsource-variable/archivo": "5.3.0",
+    "@fontsource-variable/inter": "5.3.0",
+    "@fontsource-variable/material-symbols-outlined": "5.3.9",
+    "@tailwindcss/container-queries": "0.1.1",
+    "@tailwindcss/forms": "0.5.10",
+    "alpinejs": "3.14.9",
+    "concurrently": "^9.0.1",
+    "flatpickr": "4.6.13",
+    "lucide": "0.468.0",
+    "playwright": "1.62.1",
+    "tailwindcss": "3.4.17"
+  },
+  "scripts": {
+    "build": "node scripts/build-assets.mjs",
+    "test:scanner": "node --test tests/scanner-feedback.test.cjs",
+    "test:browser": "node tests/browser/readiness.cjs",
+    "test:flows": "node tests/browser/flows.cjs"
+  },
+  "overrides": {
+    "shell-quote": "1.12.0"
+  }
+}

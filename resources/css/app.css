@@ -1,0 +1,43 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face { font-family: Inter; font-style: normal; font-weight: 100 900; font-display: swap; src: url('./fonts/inter-latin-wght-normal.woff2') format('woff2'); }
+@font-face { font-family: Archivo; font-style: normal; font-weight: 100 900; font-display: swap; src: url('./fonts/archivo-latin-wght-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Material Symbols Outlined'; font-style: normal; font-weight: 100 700; font-display: block; src: url('./fonts/material-symbols-outlined-latin-wght-normal.woff2') format('woff2'); }
+.material-symbols-outlined { font-family: 'Material Symbols Outlined'; font-weight: normal; font-style: normal; font-size: 24px; line-height: 1; letter-spacing: normal; text-transform: none; display: inline-block; white-space: nowrap; word-wrap: normal; direction: ltr; -webkit-font-feature-settings: 'liga'; -webkit-font-smoothing: antialiased; }
+
+/* Shared constraints protect content instead of hiding page overflow. */
+[x-cloak] { display: none !important; }
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { overflow-wrap: break-word; }
+img, video, svg { max-width: 100%; }
+input, select, textarea { max-width: 100%; }
+button, a, input, textarea, select { touch-action: manipulation; }
+:focus-visible { outline: 2px solid #ff6b00; outline-offset: 3px; }
+#main-content { min-width: 0; }
+#sidebar { max-width: calc(100vw - 2rem); height: 100dvh; }
+#sidebar > nav { min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
+#sidebar > :not(nav) { flex-shrink: 0; }
+.flash-alerts { padding-top: 1rem; }
+.flash-alerts p { min-width: 0; overflow-wrap: anywhere; }
+.flash-alerts button { flex-shrink: 0; min-width: 2.75rem; min-height: 2.75rem; }
+.ticket-details > div:not(:has(> p)) { gap: .75rem; }
+.ticket-details > div > span:last-child { min-width: 0; text-align: right; overflow-wrap: anywhere; }
+.ticket-qr { width: min(100%, 16rem); height: auto; aspect-ratio: 1; }
+.ticket-qr-wrap { width: min(100%, 18rem); }
+.fixed.inset-0 > .bg-dark-card,
+.fixed.inset-0 > .relative.max-w-2xl { max-height: calc(100dvh - 2rem); overflow-y: auto; }
+.fixed.inset-0 img { max-height: calc(100dvh - 5rem); object-fit: contain; }
+@media (max-width: 767px) {
+    .flash-alerts { padding-top: 4.5rem; }
+    .flash-alerts + main { padding-top: 1rem; }
+    #sidebar-toggle, #sidebar-close { min-width: 2.75rem; min-height: 2.75rem; }
+    input:not([type=checkbox]):not([type=radio]):not([type=file]), select, textarea { font-size: 16px; }
+    .ticket-details > div:not(:has(> p)) { flex-wrap: wrap; }
+    .ticket-details > div > span:last-child { max-width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+}
