@@ -12,6 +12,7 @@ for (const [source, destination] of [
 ]) await copyFile(`node_modules/${source}`, `public/assets/${destination}`);
 await copyFile('resources/js/sidebar.js', 'public/assets/sidebar.js');
 await copyFile('resources/js/forms.js', 'public/assets/forms.js');
+await copyFile('resources/js/live-status.js', 'public/assets/live-status.js');
 await mkdir('public/assets/fonts', { recursive: true });
 await mkdir('public/assets/licenses', { recursive: true });
 await copyFile('node_modules/lucide/LICENSE', 'public/assets/licenses/lucide.txt');

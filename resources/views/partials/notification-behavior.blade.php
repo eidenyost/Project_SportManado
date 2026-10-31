@@ -24,6 +24,8 @@
         } catch (_) {} finally { timer=setTimeout(poll,30000); }
     };
     document.addEventListener('visibilitychange', () => { if (!document.hidden) poll(); });
+    window.addEventListener('pageshow', event => { if (event.persisted) poll(); });
+    window.addEventListener('focus', poll);
     window.addEventListener('notifications:updated', event => {
         ++generation; controller?.abort(); window.syncNotificationCount(event.detail.count);
     });

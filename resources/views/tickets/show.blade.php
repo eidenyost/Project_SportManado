@@ -3,7 +3,11 @@
 @section('title', 'E-Tiket #' . $ticket->ticket_code . ' – SportManado')
 
 @section('content')
-<div class="max-w-3xl mx-auto px-4 md:px-8 py-8">
+<div class="max-w-3xl mx-auto px-4 md:px-8 py-8"
+     data-ticket-live data-status-url="{{ route('tickets.status', $ticket) }}"
+     data-sync-url="{{ route('tickets.sync-payment', $ticket) }}"
+     data-ticket-status="{{ $ticket->status }}" data-payment-status="{{ $ticket->payment?->status }}">
+    <p data-live-message role="status" aria-live="polite" class="text-sm text-slate-400 mb-3"></p>
 
     @if(!empty($paymentError))
         <div role="alert" class="mb-4 rounded-xl border border-amber-800 bg-amber-950/30 p-4 text-sm text-amber-300">{{ $paymentError }}</div>
@@ -165,14 +169,15 @@
         document.getElementById('pay-button').onclick = function(){
             snap.pay('{{ $snapToken }}', {
                 onSuccess: function(result){
-                    window.location.href = "{{ route('tickets.check-payment', $ticket) }}";
+                    window.dispatchEvent(new Event('sportmanado:payment-result'));
                 },
                 onPending: function(result){
-                    window.location.href = "{{ route('tickets.check-payment', $ticket) }}";
+                    window.dispatchEvent(new Event('sportmanado:payment-result'));
                 },
                 onError: function(result){
-                    alert("Pembayaran gagal!");
-                }
+                    window.dispatchEvent(new Event('sportmanado:payment-result'));
+                },
+                onClose: function(){ window.dispatchEvent(new Event('sportmanado:payment-result')); }
             });
         };
     </script>

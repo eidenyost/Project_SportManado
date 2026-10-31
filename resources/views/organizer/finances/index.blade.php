@@ -9,6 +9,7 @@
 @endpush
 
 @section('content')
+<span hidden data-refresh-on-return></span>
 <div class="max-w-6xl mx-auto space-y-5">
 
     <!-- Header -->

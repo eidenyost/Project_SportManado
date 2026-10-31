@@ -3,7 +3,7 @@
 @section('title', 'Form Pendaftaran Event – ' . $event->title)
 
 @section('content')
-<div class="max-w-3xl mx-auto px-4 md:px-8 py-8">
+<div class="max-w-3xl mx-auto px-4 md:px-8 py-8" data-registration-state-url="{{ route('tickets.registration-state', $event) }}">
 
     <a href="{{ route('events.show', $event) }}"
        class="text-sm text-slate-400 hover:text-accent mb-6 inline-block">

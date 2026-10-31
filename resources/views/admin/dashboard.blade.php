@@ -30,6 +30,7 @@
 @endpush
 
 @section('content')
+<span hidden data-refresh-on-return></span>
 <div class="space-y-6">
 
     @if($tab === 'overview')

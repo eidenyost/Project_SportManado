@@ -1,4 +1,5 @@
 <x-app-layout>
+    <span hidden data-refresh-on-return></span>
     <!-- ===================== HERO SECTION ===================== -->
     <section class="relative min-h-[400px] flex items-center pt-20 pb-24 overflow-hidden">
         <!-- Background Image -->

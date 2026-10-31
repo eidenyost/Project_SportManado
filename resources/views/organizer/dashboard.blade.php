@@ -4,6 +4,7 @@
 @section('page-title', 'Dashboard Penyelenggara/EO')
 
 @section('content')
+<span hidden data-refresh-on-return></span>
 <div class="space-y-6">
 
     <div class="grid grid-cols-1 gap-3 sm:grid-cols-3" aria-label="Ringkasan saldo">

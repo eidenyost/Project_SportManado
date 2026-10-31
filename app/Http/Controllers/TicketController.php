@@ -51,6 +51,11 @@ class TicketController extends Controller
     {
         $user = Auth::user();
 
+        $existing = Ticket::where('user_id', $user->id)->where('event_id', $event->id)->first();
+        if ($existing) {
+            return redirect()->route('tickets.show', $existing)->with('info', 'Anda sudah terdaftar di acara ini.');
+        }
+
         if ($event->status !== 'active') {
             return redirect()->route('events.show', $event)
                 ->with('error', 'Acara ini sudah tidak menerima pendaftaran.');
@@ -59,15 +64,6 @@ class TicketController extends Controller
         if (now()->gt($event->registration_deadline)) {
             return redirect()->route('events.show', $event)
                 ->with('error', 'Batas waktu pendaftaran sudah berakhir.');
-        }
-
-        $existing = Ticket::where('user_id', $user->id)
-            ->where('event_id', $event->id)
-            ->first();
-
-        if ($existing) {
-            return redirect()->route('tickets.show', $existing)
-                ->with('info', 'Anda sudah terdaftar di acara ini.');
         }
 
         if ($event->isFull()) {
@@ -153,6 +149,42 @@ class TicketController extends Controller
     private function validatedCustomAnswers(Request $request, Event $event): array
     {
         return app(\App\Services\EventAnswerValidator::class)->validate($event, $request->input('custom_answers', []));
+    }
+
+    public function registrationState(Event $event)
+    {
+        $ticket = Ticket::where('user_id', auth()->id())->where('event_id', $event->id)->first();
+        return response()->json(['ticket_url' => $ticket ? route('tickets.show', $ticket) : null])
+            ->header('Cache-Control', 'no-store, private');
+    }
+
+    public function paymentStatus(Ticket $ticket)
+    {
+        abort_unless($ticket->user_id === auth()->id(), 403);
+        $ticket->refresh()->load('payment');
+        return response()->json([
+            'ticket_status' => $ticket->status,
+            'payment_status' => $ticket->payment?->status,
+            'ticket_url' => route('tickets.show', $ticket),
+        ])->header('Cache-Control', 'no-store, private');
+    }
+
+    public function syncPaymentStatus(Ticket $ticket)
+    {
+        abort_unless($ticket->user_id === auth()->id(), 403);
+        // Webhook polling reads our database. Provider reconciliation is bounded
+        // across tabs and callers, and never accepts a status from the browser.
+        if (\Illuminate\Support\Facades\Cache::add('payment-sync:'.$ticket->id, true, now()->addSeconds(20))) {
+            return $this->checkPaymentStatus($ticket);
+        }
+        return $this->paymentStatus($ticket);
+    }
+
+    private function paymentStatusResult(Ticket $ticket, ?string $message = null)
+    {
+        if (request()->expectsJson()) return $this->paymentStatus($ticket);
+        $redirect = redirect()->route('tickets.show', $ticket);
+        return $message ? $redirect->with('success', $message) : $redirect;
     }
 
     /**
@@ -248,7 +280,7 @@ class TicketController extends Controller
         $payment = $ticket->payment;
 
         if (!$payment || $ticket->status !== 'pending' || $payment->status !== 'pending') {
-            return redirect()->route('tickets.show', $ticket);
+            return $this->paymentStatusResult($ticket);
         }
 
         try {
@@ -271,15 +303,14 @@ class TicketController extends Controller
                 );
 
                 if ($ticketStatus === 'active') {
-                    return redirect()->route('tickets.show', $ticket)
-                        ->with('success', 'Pembayaran berhasil! Tiket Anda sudah aktif dan QR Code telah dibuat.');
+                    return $this->paymentStatusResult($ticket, 'Pembayaran berhasil! Tiket Anda sudah aktif dan QR Code telah dibuat.');
                 }
             }
         } catch (\Exception $e) {
             // Transaksi belum ada di Midtrans atau error jaringan - abaikan, tetap tampilkan tiket
         }
 
-        return redirect()->route('tickets.show', $ticket);
+        return $this->paymentStatusResult($ticket);
     }
 
     /**

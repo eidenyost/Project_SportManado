@@ -30,14 +30,17 @@ class HomepageAndNavbarTest extends TestCase
         $response->assertSee('Masuk');
     }
 
-    public function test_cta_button_redirects_guest_to_organizer_registration()
+    public function test_cta_button_requires_login_and_remembers_event_destination()
     {
         $response = $this->get('/');
         $response->assertStatus(200);
-        $response->assertSee(route('register.form', ['role' => 'organizer']));
+        $response->assertSee(route('events.index'));
+        $response->assertDontSee('Daftarkan Event');
+        $this->get(route('events.index'))->assertRedirect(route('login'));
+        $this->assertSame(route('events.index'), session('url.intended'));
     }
 
-    public function test_cta_button_redirects_organizer_to_event_creation()
+    public function test_homepage_has_only_event_discovery_cta_for_organizer()
     {
         $user = User::factory()->create(['role' => 'organizer']);
         $organizer = Organizer::create([
@@ -49,7 +52,8 @@ class HomepageAndNavbarTest extends TestCase
         ]);
         $response = $this->actingAs($user)->get('/');
         $response->assertStatus(200);
-        $response->assertSee(route('organizer.events.create'));
+        $response->assertSee(route('events.index'));
+        $response->assertDontSee('Daftarkan Event');
     }
 
     public function test_cta_button_redirects_participant_to_events_index()
@@ -156,7 +160,7 @@ class HomepageAndNavbarTest extends TestCase
         $response->assertStatus(200);
 
         // Footer harus menampilkan platform branding
-        $response->assertSee('Manajemen Event & E-Ticketing Olahraga');
+        $response->assertSee('Platform Event Olahraga di Manado');
 
         // Tidak boleh ada link menu dummy
         $response->assertDontSee('Informasi</span>', false);

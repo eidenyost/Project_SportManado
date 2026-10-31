@@ -3,6 +3,7 @@
 @section('title', 'Status Pengajuan Event – SportManado')
 
 @section('content')
+<span hidden data-refresh-on-return></span>
 <div class="min-h-screen bg-[#080c14]">
     <div class="max-w-2xl mx-auto px-4 sm:px-6 py-12">
 

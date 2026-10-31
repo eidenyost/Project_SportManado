@@ -4,6 +4,7 @@
 @section('page-title', 'Penarikan Dana')
 
 @section('content')
+<span hidden data-refresh-on-return></span>
 <div class="max-w-6xl mx-auto space-y-8">
 
     <!-- Breadcrumb -->

@@ -3,6 +3,7 @@
 @section('title', 'Jelajahi Event Olahraga – SportManado')
 
 @section('content')
+<span hidden data-refresh-on-return></span>
 <form method="GET" action="{{ route('events.index') }}" id="filterForm">
     <main class="max-w-7xl mx-auto px-4 md:px-8 py-12">
         <h1 class="text-2xl md:text-3xl font-bold text-white font-display">Event</h1>

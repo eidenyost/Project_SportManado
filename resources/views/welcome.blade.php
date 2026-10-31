@@ -30,25 +30,6 @@
                 <a href="{{ route('events.index') }}" class="px-7 py-3.5 bg-[#ff6b00] hover:bg-[#e05e00] text-white font-bold rounded-xl shadow-md transition-colors flex items-center gap-2 text-sm">
                     <span>Temukan Event</span>
                 </a>
-                @auth
-                    @if(auth()->user()->role === 'organizer')
-                        <a href="{{ route('organizer.events.create') }}" class="px-7 py-3.5 bg-slate-900 border border-slate-700 hover:border-slate-500 text-white font-bold rounded-xl transition-colors flex items-center gap-2 text-sm">
-                            <span>Daftarkan Event</span>
-                        </a>
-                    @elseif(auth()->user()->role === 'admin')
-                        <a href="{{ route('admin.dashboard') }}" class="px-7 py-3.5 bg-slate-900 border border-slate-700 hover:border-slate-500 text-white font-bold rounded-xl transition-colors flex items-center gap-2 text-sm">
-                            <span>Admin Panel</span>
-                        </a>
-                    @else
-                        <a href="{{ route('event-registration.create') }}" class="px-7 py-3.5 bg-slate-900 border border-slate-700 hover:border-slate-500 text-white font-bold rounded-xl transition-colors flex items-center gap-2 text-sm">
-                            <span>Daftarkan Event</span>
-                        </a>
-                    @endif
-                @else
-                    <a href="{{ route('register.form', ['role' => 'organizer']) }}" class="px-7 py-3.5 bg-slate-900 border border-slate-700 hover:border-slate-500 text-white font-bold rounded-xl transition-colors flex items-center gap-2 text-sm">
-                        <span>Daftarkan Event</span>
-                    </a>
-                @endauth
             </div>
         </div>
     </div>

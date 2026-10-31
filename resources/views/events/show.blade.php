@@ -3,6 +3,7 @@
 @section('title', $event->title . ' – SportManado')
 
 @section('content')
+<span hidden data-refresh-on-return></span>
 <div class="max-w-4xl mx-auto px-4 md:px-8 py-10">
     <a href="{{ route('events.index') }}" class="text-sm text-slate-500 hover:text-accent transition-colors">
         ← Kembali

@@ -3,6 +3,7 @@
 @section('title', 'Tiket Saya – SportManado')
 
 @section('content')
+<span hidden data-refresh-on-return></span>
 <div class="max-w-5xl mx-auto px-4 md:px-8 py-8">
 
     <div class="mb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">

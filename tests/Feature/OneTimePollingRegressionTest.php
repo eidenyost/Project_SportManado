@@ -71,6 +71,58 @@ namespace Tests\Feature {
             $this->assertNull($ticket->fresh()->qr_code_path);
         }
 
+        public function test_status_poll_reads_database_without_contacting_midtrans_and_denies_other_users(): void
+        {
+            [$user, $event, $ticket, $payment] = $this->pendingPurchase();
+            $this->actingAs($user)->getJson(route('tickets.status', $ticket))
+                ->assertOk()->assertJsonPath('ticket_status', 'pending')
+                ->assertJsonPath('payment_status', 'pending')
+                ->assertHeader('Cache-Control', 'no-store, private');
+            $this->assertNull(MT_Tests::$lastHttpRequest);
+            $other = User::factory()->create(['role'=>'user']);
+            $this->actingAs($other)->getJson(route('tickets.status', $ticket))->assertForbidden();
+        }
+
+        public function test_json_reconciliation_uses_provider_status_and_is_idempotent(): void
+        {
+            [$user, $event, $ticket, $payment] = $this->pendingPurchase();
+            $this->settlementResponse();
+            $this->actingAs($user)->postJson(route('tickets.sync-payment', $ticket), ['status'=>'confirmed'])
+                ->assertOk()->assertJsonPath('ticket_status', 'active')
+                ->assertJsonPath('payment_status', 'confirmed');
+            $this->assertSame('confirmed', $payment->fresh()->status);
+            Storage::disk('public')->assertExists($ticket->fresh()->qr_code_path);
+            $this->assertSame(1, \App\Models\Notification::where('notifiable_type', Ticket::class)
+                ->where('notifiable_id', $ticket->id)->where('type','ticket_active')->count());
+            MT_Tests::$lastHttpRequest = null;
+            $this->postJson(route('tickets.sync-payment', $ticket))->assertOk();
+            $this->assertNull(MT_Tests::$lastHttpRequest);
+        }
+
+        public function test_client_cannot_confirm_payment_and_repeated_sync_is_bounded(): void
+        {
+            [$user, $event, $ticket, $payment] = $this->pendingPurchase();
+            MT_Tests::$stubHttpResponse = json_encode(['order_id'=>$ticket->ticket_code, 'status_code'=>'201',
+                'gross_amount'=>'50000.00', 'transaction_status'=>'pending']);
+            $this->actingAs($user)->postJson(route('tickets.sync-payment', $ticket), ['status'=>'confirmed'])
+                ->assertOk()->assertJsonPath('payment_status', 'pending');
+            MT_Tests::$lastHttpRequest = null;
+            $this->postJson(route('tickets.sync-payment', $ticket))->assertOk();
+            $this->assertNull(MT_Tests::$lastHttpRequest);
+            $this->assertNull($ticket->fresh()->qr_code_path);
+            $this->actingAs(User::factory()->create(['role'=>'user']))
+                ->postJson(route('tickets.sync-payment', $ticket))->assertForbidden();
+        }
+
+        public function test_back_to_registration_with_existing_ticket_returns_ticket_even_after_event_closed(): void
+        {
+            [$user, $event, $ticket] = $this->pendingPurchase();
+            $event->update(['status'=>'completed']);
+            $this->actingAs($user)->get(route('tickets.register', $event))->assertRedirect(route('tickets.show', $ticket));
+            $this->getJson(route('tickets.registration-state', $event))
+                ->assertOk()->assertJsonPath('ticket_url', route('tickets.show', $ticket));
+        }
+
         public function test_legitimate_pending_settlement_activates_ticket_and_creates_qr(): void
         {
             [$user, $event, $ticket, $payment] = $this->pendingPurchase();
