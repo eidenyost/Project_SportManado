@@ -104,9 +104,12 @@ Route::middleware(['auth', 'verified', 'role:user'])->group(function () {
     // Tickets
     Route::get('/tickets',                         [TicketController::class, 'myTickets'])->name('tickets.index');
     Route::get('/events/{event}/register',         [TicketController::class, 'register'])->name('tickets.register');
+    Route::get('/events/{event}/registration-state', [TicketController::class, 'registrationState'])->middleware('throttle:30,1')->name('tickets.registration-state');
     Route::post('/events/{event}/register',        [TicketController::class, 'submitPayment'])->name('tickets.submit-payment');
     Route::get('/tickets/{ticket}',                   [TicketController::class, 'show'])->name('tickets.show');
     Route::get('/tickets/{ticket}/check-payment',     [TicketController::class, 'checkPaymentStatus'])->name('tickets.check-payment');
+    Route::get('/tickets/{ticket}/status', [TicketController::class, 'paymentStatus'])->middleware('throttle:60,1')->name('tickets.status');
+    Route::post('/tickets/{ticket}/sync-payment', [TicketController::class, 'syncPaymentStatus'])->middleware('throttle:12,1')->name('tickets.sync-payment');
     Route::post('/tickets/{ticket}/demo-pay',         [TicketController::class, 'demoPay'])->name('tickets.demo-pay');
 
     // Event Registration Request (Participant → awaiting admin approval)
