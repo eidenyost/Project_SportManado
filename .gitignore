@@ -18,6 +18,8 @@
 !/storage/framework/views/.gitignore
 /storage/logs/*
 !/storage/logs/.gitignore
+/storage/framework/testing/
+/.phpunit.cache/
 /public/storage
 *.sql
 *.sqlite
