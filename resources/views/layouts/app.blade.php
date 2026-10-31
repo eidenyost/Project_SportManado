@@ -243,7 +243,7 @@
     <div class="max-w-7xl mx-auto space-y-4 text-sm">
         <!-- Bottom Footer Details -->
         <div class="flex flex-col md:flex-row justify-between items-center gap-2 text-xs text-slate-500">
-            <span>Platform Manajemen Event &amp; E-Ticketing Olahraga di Manado</span>
+            <span>Platform Event Olahraga di Manado</span>
         </div>
     </div>
 </footer>

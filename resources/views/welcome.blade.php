@@ -23,7 +23,7 @@
             </h1>
             
             <p class="max-w-2xl text-sm text-slate-400 leading-relaxed font-body md:text-base">
-                SportManado bertujuan memusatkan seluruh event olahraga komunitas di Manado dalam satu platform digital. Baik sebagai peserta maupun penyelenggara, semua bisa menemukan info event, mendaftar, dan mengelola event secara mudah.
+                Temukan dan ikuti event olahraga di Manado dengan mudah. SportManado menghubungkan Peserta dengan Penyelenggara/EO melalui informasi event, pendaftaran online, dan e-tiket berbasis kode QR.
             </p>
             
             <div class="flex flex-wrap gap-4 pt-2">
