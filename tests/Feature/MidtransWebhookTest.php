@@ -3,11 +3,13 @@
 namespace Tests\Feature;
 
 use App\Models\Event;
+use App\Models\Notification;
 use App\Models\Organizer;
 use App\Models\Payment;
 use App\Models\Ticket;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class MidtransWebhookTest extends TestCase
@@ -16,6 +18,7 @@ class MidtransWebhookTest extends TestCase
 
     public function test_successful_webhook_updates_status(): void
     {
+        Storage::fake('public');
         $user = User::create([
             'name' => 'User Test',
             'email' => 'user-test@example.com',
@@ -89,5 +92,19 @@ class MidtransWebhookTest extends TestCase
             'id' => $ticket->id,
             'status' => 'active'
         ]);
+        Storage::disk('public')->assertExists($ticket->fresh()->qr_code_path);
+        $this->assertSame(1, Notification::where('notifiable_type', Ticket::class)
+            ->where('notifiable_id', $ticket->id)->where('type', 'ticket_active')->count());
+
+        // Provider retries must not duplicate activation notices or revenue.
+        $this->postJson(route('payments.notification'), [
+            'order_id' => $orderId, 'status_code' => $statusCode,
+            'gross_amount' => $grossAmount, 'signature_key' => $signatureKey,
+            'transaction_status' => 'settlement', 'payment_type' => 'qris',
+            'transaction_id' => 'tx-midtrans-success-999',
+        ])->assertOk();
+        $this->assertSame(1, Notification::where('notifiable_type', Ticket::class)
+            ->where('notifiable_id', $ticket->id)->where('type', 'ticket_active')->count());
+        $this->assertSame(50000, app(\App\Services\FinanceService::class)->grossRevenue($event));
     }
 }

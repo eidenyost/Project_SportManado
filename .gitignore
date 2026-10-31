@@ -20,6 +20,7 @@
 !/storage/logs/.gitignore
 /storage/framework/testing/
 /.phpunit.cache/
+/.phpunit.result.cache
 /public/storage
 *.sql
 *.sqlite

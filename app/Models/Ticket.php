@@ -109,7 +109,9 @@ class Ticket extends Model
             throw new \RuntimeException('QR Code gagal disimpan. Silakan coba lagi.');
         }
 
-        $this->update([
+        // The outer save already emits the ticket status notification. Persisting
+        // its QR path must not emit that same status transition a second time.
+        $this->updateQuietly([
             'qr_code_path' => $qrFilename,
         ]);
     }
