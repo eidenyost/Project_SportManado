@@ -96,7 +96,7 @@
                         <div class="bg-dark-card rounded-xl overflow-hidden border border-slate-800/40 flex flex-col transition-all duration-200 group-hover:border-accent/30 group-hover:shadow-lg group-hover:shadow-accent/5">
                             <div class="relative h-44 bg-slate-900 overflow-hidden">
                                 @if($event->banner)
-                                    <img class="w-full h-full object-cover transition duration-300 group-hover:opacity-80" alt="{{ $event->title }}" src="{{ asset('storage/' . $event->banner) }}"/>
+                                    <img class="w-full h-full object-cover transition duration-300 group-hover:opacity-80" alt="{{ $event->title }}" src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($event->banner) }}"/>
                                 @else
                                     <div class="w-full h-full flex items-center justify-center text-slate-600 bg-slate-950 text-xs select-none">
                                         SportManado

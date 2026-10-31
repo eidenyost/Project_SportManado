@@ -42,7 +42,7 @@
                     <a href="{{ route('events.show', $event) }}" class="group">
                         <div class="relative aspect-video bg-dark-bg rounded-md overflow-hidden mb-3">
                             @if($event->banner)
-                                <img alt="{{ $event->title }}" class="w-full h-full object-cover" src="{{ asset('storage/' . $event->banner) }}"/>
+                                <img alt="{{ $event->title }}" class="w-full h-full object-cover" src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($event->banner) }}"/>
                             @else
                                 <div class="w-full h-full flex items-center justify-center text-slate-600 bg-slate-950 text-sm select-none">SportManado</div>
                             @endif

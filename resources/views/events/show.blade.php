@@ -10,7 +10,7 @@
 
     @if($event->banner)
     <div class="mt-6 mb-8 rounded-xl overflow-hidden border border-slate-800/40">
-        <img src="{{ asset('storage/' . $event->banner) }}"
+        <img src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($event->banner) }}"
              alt="{{ $event->title }}"
              class="w-full h-56 md:h-72 object-cover">
     </div>

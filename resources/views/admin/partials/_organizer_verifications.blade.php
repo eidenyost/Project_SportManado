@@ -16,7 +16,7 @@
                 <div class="flex items-start gap-3">
                     <div class="w-12 h-12 rounded-xl bg-[#080c14] flex items-center justify-center text-white font-bold text-sm overflow-hidden border border-slate-800 flex-shrink-0">
                         @if($org->logo)
-                            <img src="{{ asset('storage/' . $org->logo) }}" alt="Logo {{ $org->organization_name }}" class="w-full h-full object-cover">
+                            <img src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($org->logo) }}" alt="Logo {{ $org->organization_name }}" class="w-full h-full object-cover">
                         @else
                             {{ strtoupper(substr($org->organization_name, 0, 2)) }}
                         @endif

@@ -97,7 +97,7 @@
         <div class="text-center">
             <div class="ticket-qr-wrap bg-dark-card p-4 rounded-xl inline-block mx-auto">
                 @if($ticket->qr_code_path)
-                    <img src="{{ asset('storage/' . $ticket->qr_code_path) }}" alt="QR Code" class="ticket-qr">
+                    <img src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($ticket->qr_code_path) }}" alt="QR Code" class="ticket-qr">
                 @else
                     <div class="ticket-qr bg-dark-bg border border-slate-700/50 rounded-xl flex flex-col items-center justify-center text-slate-500">
                         <span class="material-symbols-outlined text-4xl mb-2">qr_code_scanner</span>

@@ -208,7 +208,7 @@
 
                 <div class="border-2 border-dashed border-[#ff6b00]/40 hover:border-[#ff6b00] rounded-xl py-10 px-6 text-center hover:bg-[#ff6b00]/5 transition-all cursor-pointer" id="drop-zone" onclick="document.getElementById('banner').click()">
                     <div id="preview-container" class="{{ $event->banner ? '' : 'hidden' }} mb-3">
-                        <img id="banner-preview" src="{{ $event->banner ? asset('storage/' . $event->banner) : 'data:image/svg+xml;charset=utf8,%3Csvg%20xmlns=\'http://www.w3.org/2000/svg\'%3E%3C/svg%3E' }}" alt="Preview" class="w-full h-36 object-cover rounded-xl">
+                        <img id="banner-preview" src="{{ $event->banner ? \Illuminate\Support\Facades\Storage::disk('public')->url($event->banner) : 'data:image/svg+xml;charset=utf8,%3Csvg%20xmlns=\'http://www.w3.org/2000/svg\'%3E%3C/svg%3E' }}" alt="Preview" class="w-full h-36 object-cover rounded-xl">
                     </div>
                     <div id="drop-placeholder" class="{{ $event->banner ? 'hidden' : '' }}">
                         <p class="text-xs font-semibold text-slate-400">Klik / seret pamflet ke sini untuk mengganti</p>
@@ -237,7 +237,7 @@
                     @if($event->proposal)
                         <div class="mb-2 text-xs text-slate-400 flex items-center gap-2">
                             <i data-lucide="file-text" class="w-4 h-4 text-[#ff6b00]"></i>
-                            <span>Berkas saat ini: <a href="{{ asset('storage/' . $event->proposal) }}" target="_blank" class="text-[#ff6b00] hover:underline font-semibold">Lihat Proposal</a></span>
+                            <span>Berkas saat ini: <a href="{{ route('organizer.events.documents', [$event, 'type' => 'proposal']) }}" target="_blank" class="text-[#ff6b00] hover:underline font-semibold">Lihat Proposal</a></span>
                         </div>
                     @endif
                     <div class="flex items-center gap-3">
@@ -257,7 +257,7 @@
                     @if($event->permit)
                         <div class="mb-2 text-xs text-slate-400 flex items-center gap-2">
                             <i data-lucide="file-text" class="w-4 h-4 text-[#ff6b00]"></i>
-                            <span>Berkas saat ini: <a href="{{ asset('storage/' . $event->permit) }}" target="_blank" class="text-[#ff6b00] hover:underline font-semibold">Lihat Izin</a></span>
+                            <span>Berkas saat ini: <a href="{{ route('organizer.events.documents', [$event, 'type' => 'permit']) }}" target="_blank" class="text-[#ff6b00] hover:underline font-semibold">Lihat Izin</a></span>
                         </div>
                     @endif
                     <div class="flex items-center gap-3">
@@ -277,7 +277,7 @@
                     @if($event->ktp_image)
                         <div class="mb-2 text-xs text-slate-400 flex items-center gap-2">
                             <i data-lucide="image" class="w-4 h-4 text-[#ff6b00]"></i>
-                            <span>Berkas saat ini: <a href="{{ asset('storage/' . $event->ktp_image) }}" target="_blank" class="text-[#ff6b00] hover:underline font-semibold">Lihat KTP</a></span>
+                            <span>Berkas saat ini: <a href="{{ route('organizer.events.documents', [$event, 'type' => 'ktp_image']) }}" target="_blank" class="text-[#ff6b00] hover:underline font-semibold">Lihat KTP</a></span>
                         </div>
                     @endif
                     <div class="flex items-center gap-3">

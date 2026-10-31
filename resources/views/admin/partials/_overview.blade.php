@@ -85,7 +85,7 @@
                 <div class="bg-dark-card border-2 border-[#ff6b00]/30 rounded-xl overflow-hidden">
                     <div class="relative block aspect-video bg-slate-900 overflow-hidden">
                         @if($event->banner)
-                            <img src="{{ asset('storage/' . $event->banner) }}" class="w-full h-full object-cover" alt="{{ $event->title }}">
+                            <img src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($event->banner) }}" class="w-full h-full object-cover" alt="{{ $event->title }}">
                         @else
                             <div class="w-full h-full flex items-center justify-center text-slate-600">
                                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -34,11 +34,24 @@ class HostingCheck extends Command
         $check('Local payment simulator disabled', !config('services.midtrans.demo'));
         $check('Session driver database', config('session.driver') === 'database');
         $check('Queue sync (no persistent worker needed)', config('queue.default') === 'sync');
-        foreach (['storage','storage/app/private','storage/app/public','storage/framework/views','storage/framework/sessions','bootstrap/cache'] as $directory) {
+        $directories = ['storage', 'storage/framework/views', 'storage/framework/sessions', 'bootstrap/cache'];
+        foreach (['local' => 'storage/app/private', 'public' => 'storage/app/public'] as $disk => $directory) {
+            if (config('filesystems.disks.'.$disk.'.driver') === 'local') $directories[] = $directory;
+        }
+        foreach ($directories as $directory) {
             $check('Writable '.$directory, is_dir(base_path($directory)) && is_writable(base_path($directory)));
         }
-        $check('public/storage points to public disk only', realpath(public_path('storage')) !== false
-            && realpath(public_path('storage')) === realpath(storage_path('app/public')));
+        if (config('filesystems.disks.public.driver') === 'local') {
+            $check('public/storage points to public disk only', realpath(public_path('storage')) !== false
+                && realpath(public_path('storage')) === realpath(storage_path('app/public')));
+        } else {
+            $public = config('filesystems.disks.public');
+            $private = config('filesystems.disks.local');
+            $check('Remote public and private buckets are separate', filled($public['bucket'] ?? null)
+                && filled($private['bucket'] ?? null) && $public['bucket'] !== $private['bucket']);
+            $check('Remote public media URL uses HTTPS', str_starts_with($public['url'] ?? '', 'https://'));
+            $check('Remote storage raises write failures', ($public['throw'] ?? false) && ($private['throw'] ?? false));
+        }
         foreach (['app.css','alpine.min.js','lucide.min.js','sidebar.js','forms.js','flatpickr.min.js','flatpickr.min.css','flatpickr-id.js',
             'fonts/inter-latin-wght-normal.woff2','fonts/archivo-latin-wght-normal.woff2','fonts/material-symbols-outlined-latin-wght-normal.woff2'] as $asset) {
             $check('Local asset '.$asset, is_file(public_path('assets/'.$asset)));

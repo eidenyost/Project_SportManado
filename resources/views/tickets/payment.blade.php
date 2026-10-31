@@ -47,7 +47,7 @@
                             </label>
 
                             @if(!empty($field['image']))
-                                <img src="{{ asset('storage/' . $field['image']) }}"
+                                <img src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($field['image']) }}"
                                      class="w-full max-w-sm rounded-xl border border-slate-800 object-contain mb-3 cursor-zoom-in"
                                      alt="Panduan {{ $label }}"
                                      onclick="window.open(this.src, '_blank')">

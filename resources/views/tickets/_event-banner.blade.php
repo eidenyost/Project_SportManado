@@ -1,6 +1,6 @@
 <div class="bg-dark-card rounded-xl p-4 mb-6 flex flex-col sm:flex-row gap-4 items-start sm:items-center">
     @if($event->banner)
-        <img src="{{ asset('storage/' . $event->banner) }}"
+        <img src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($event->banner) }}"
              class="w-full sm:w-16 h-16 object-cover rounded-xl flex-shrink-0" alt="{{ $event->title }}">
     @else
         <div class="w-16 h-16 rounded-xl bg-dark-bg flex items-center justify-center flex-shrink-0">

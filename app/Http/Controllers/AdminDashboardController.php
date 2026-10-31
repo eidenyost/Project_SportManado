@@ -561,6 +561,7 @@ class AdminDashboardController extends Controller
         if (!$path) {
             abort(400, 'Parameter path diperlukan.');
         }
+        abort_unless(is_string($path), 400, 'Parameter path tidak valid.');
 
         // Check if the path is in allowed directories to prevent directory traversal
         $allowedPrefixes = [
@@ -571,30 +572,7 @@ class AdminDashboardController extends Controller
             'event-reg-permits/',
         ];
 
-        $isAllowed = false;
-        foreach ($allowedPrefixes as $prefix) {
-            if (str_starts_with($path, $prefix)) {
-                $isAllowed = true;
-                break;
-            }
-        }
-
-        if (!$isAllowed) {
-            abort(403, 'Akses tidak sah ke berkas dokumen.');
-        }
-
-        // Resolve real path to prevent directory traversal bypass (e.g., "../../config/app.php")
-        $fullPath = Storage::disk('local')->path($path);
-        $allowedDir = Storage::disk('local')->path('');
-        if (!str_starts_with($fullPath, $allowedDir)) {
-            abort(403, 'Path traversal terdeteksi.');
-        }
-
-        if (!Storage::disk('local')->exists($path)) {
-            abort(404, 'Berkas dokumen tidak ditemukan.');
-        }
-
-        return Storage::disk('local')->response($path);
+        return \App\Support\PrivateFiles::respond($path, $allowedPrefixes);
     }
 
     /**
@@ -618,10 +596,7 @@ class AdminDashboardController extends Controller
         $isOwner=$withdrawal->organizer?->user_id===Auth::id();
         abort_unless(Auth::user()->isAdmin() || $isOwner,403,'Bukti transfer hanya dapat dilihat Admin dan Penyelenggara/EO pemilik pengajuan.');
         $path=$withdrawal->transfer_proof_path;
-        abort_unless($path && Storage::disk('local')->exists($path),404,'Bukti transfer belum tersedia.');
-        return Storage::disk('local')->response($path,null,[
-            'X-Content-Type-Options'=>'nosniff','Cache-Control'=>'private, no-store',
-        ]);
+        return \App\Support\PrivateFiles::respond($path, ['withdrawal-proofs/']);
     }
 
     /**

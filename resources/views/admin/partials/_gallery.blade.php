@@ -58,9 +58,9 @@
                  @keydown.window.escape="lightbox = null">
                 @foreach($galleryPhotos as $photo)
                     <div class="group relative bg-[#080c14] rounded-xl overflow-hidden border border-slate-800 cursor-pointer"
-                         @click="lightbox = '{{ asset('storage/' . $photo->image_path) }}'">
+                         @click="lightbox = '{{ \Illuminate\Support\Facades\Storage::disk('public')->url($photo->image_path) }}'">
                         <div class="aspect-[4/3] overflow-hidden">
-                            <img src="{{ asset('storage/' . $photo->image_path) }}"
+                            <img src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($photo->image_path) }}"
                                  alt="Foto galeri"
                                  class="w-full h-full object-cover">
                         </div>

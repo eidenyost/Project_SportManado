@@ -172,7 +172,7 @@
 
                 @if($item->type === 'request' && $banner)
                 <div class="relative rounded-xl overflow-hidden border border-slate-800 h-16 bg-[#080c14]">
-                    <img src="{{ asset('storage/' . $banner) }}" class="w-full h-full object-cover">
+                    <img src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($banner) }}" class="w-full h-full object-cover">
                 </div>
                 @endif
 

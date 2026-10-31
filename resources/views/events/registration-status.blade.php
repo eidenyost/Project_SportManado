@@ -88,14 +88,14 @@
                 </div>
                 <div class="flex justify-between items-center gap-4 pt-2 border-t border-[#1e293b]">
                     <span class="text-slate-400 font-medium">Proposal</span>
-                    <a href="{{ asset('storage/' . $registrationRequest->proposal_file) }}" target="_blank"
+                    <a href="{{ route('event-registration.documents', [$registrationRequest, 'type' => 'proposal']) }}" target="_blank"
                        class="text-[#ff6b00] hover:text-[#e05e00] text-xs font-bold flex items-center gap-1">
                         📥 Lihat File
                     </a>
                 </div>
                 <div class="flex justify-between items-center gap-4">
                     <span class="text-slate-400 font-medium">Surat Izin</span>
-                    <a href="{{ asset('storage/' . $registrationRequest->permit_file) }}" target="_blank"
+                    <a href="{{ route('event-registration.documents', [$registrationRequest, 'type' => 'permit']) }}" target="_blank"
                        class="text-[#ff6b00] hover:text-[#e05e00] text-xs font-bold flex items-center gap-1">
                         📥 Lihat File
                     </a>

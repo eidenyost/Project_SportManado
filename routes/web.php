@@ -52,6 +52,13 @@ Route::middleware('auth')->prefix('notifications')->name('notifications.')->grou
 
 Route::get('/withdrawals/{withdrawal}/proof',[AdminDashboardController::class,'downloadWithdrawalProof'])->middleware('auth')->name('withdrawals.proof');
 
+Route::middleware('auth')->group(function () {
+    Route::get('/organizer/events/{event}/documents/{type}', [\App\Http\Controllers\PrivateDocumentController::class, 'event'])
+        ->name('organizer.events.documents');
+    Route::get('/event-registration/{eventRequest}/documents/{type}', [\App\Http\Controllers\PrivateDocumentController::class, 'registration'])
+        ->name('event-registration.documents');
+});
+
 Route::post('/payments/notification', [OrganizerPaymentController::class, 'handleNotification'])
     ->name('payments.notification');
 
